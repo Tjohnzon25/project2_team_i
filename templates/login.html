@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>login page</title>
+    <h1>This is the login page</h1>
+
+
+</head>
+<body>
+    <form action="{{ url_for('profile') }}"method="post">
+
+        <label for="username">Username:</label><br>
+        <label>
+            <input type="text" name="username"/>
+        </label><br><br>
+
+        <label for="password">Password:</label><br>
+        <label>
+            <input type="password" name="password">
+        </label><br><br>
+
+        <input type="submit" name="loginBtn">
+
+    </form>
+
+
+</body>
+</html>
