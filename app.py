@@ -47,9 +47,9 @@ def hello_world():
     return render_template('index.html')
 
 
-@app.route('/login', methods=['GET', 'POST'])
+@app.route('/login')
 def login():
-        return render_template('profile.html')
+        return render_template('login.html')
 
 
 @app.route('/profile')
