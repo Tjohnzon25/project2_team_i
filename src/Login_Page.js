@@ -1,5 +1,5 @@
 import React from 'react';
-
+/** 
 const Header = () => {
     return (
         <div>
@@ -9,3 +9,6 @@ const Header = () => {
 }
 
 export default Header
+*/
+
+document.getElementById("test").innerHTML = "HI THERE!!";
