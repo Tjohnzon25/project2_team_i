@@ -5,6 +5,10 @@ export class CreateAccount extends React.Component{
         super(props);
     }
 
+    swapPage = () =>{
+        this.props.history.push('/Login_Page');
+    }
+
     render(){
         return(
           <div className="CreateAccount">
@@ -23,7 +27,7 @@ export class CreateAccount extends React.Component{
                     </div>
                 </div>
                 <div className="footer">
-                    <button type="button" className="btn">
+                    <button type="button" className="btn" onClick={this.swapPage}>
                         Create Account
                     </button>
                 </div>
