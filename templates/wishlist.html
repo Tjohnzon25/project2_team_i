@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Wishlist</title>
+</head>
+<body>
+    <form>
+
+        {% for i in data_wishlist%}
+            {% for j in data_content %}
+                {% if j.wishlist_id == i.id %}
+                    <li>{{j.content}}</li>
+                {% endif %}
+            {% endfor %}
+            <p>{{i.wishlist_name}}</p>
+            <p>{{i.user_id}}</p>
+
+        {% endfor %}
+
+    </form>
+</body>
+</html>

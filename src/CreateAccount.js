@@ -1,17 +1,23 @@
 import React from 'react';
+
 export class CreateAccount extends React.Component{
 
-    constructor(props) {
-        super(props);
+    test = () =>{
+        fetch('/test').then(response =>{
+            if(response.ok){
+                console.log(response);
+            }
+        })
     }
 
     swapPage = () =>{
-        this.props.history.push('/Login_Page');
-    }
+        this.test();
+        //this.props.history.push('/AdminView');
+    } 
 
     render(){
         return(
-          <div className="CreateAccount">
+            <div className="CreateAccount">
                 <div className="form">
                     <div className="form-group">
                         <label htmlFor="username">Enter username: </label>
