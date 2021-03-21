@@ -1,13 +1,15 @@
-const myHeading = document.querySelector('h1');
-myHeading.textContent = "THIS IS THE JAVA FILE";
-
-import React from 'react';
-import Header from './Login_Page'
+import './App.css';
+import { CreateAccount } from './CreateAccount.js';
+import { AdminView } from './AdminView.js';
+import {Route} from "react-router-dom";
 
 function App() {
-    return (
-        <div className='container'>
-            <Header />
-        </div>
-    )
+  return (
+    <div className="App">
+      <Route exact path="/" component={CreateAccount}/>
+      <Route exact path="/AdminView" component={AdminView}/>
+    </div>
+  );
 }
+
+export default App;
