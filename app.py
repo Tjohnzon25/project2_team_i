@@ -65,7 +65,12 @@ def name(first_name):
 def createaccount():
     return render_template('createAccount.html')
 
-@app.route('/profile', methods=['GET', 'POST'])
+@app.route('/admin')
+def admin():
+    data_wishlist = Wishlist.query.all()
+    return render_template('adminView.html', data_wishlist=data_wishlist)
+
+@app.route('/profile')
 def profile():
     return render_template('profile.html')
 
