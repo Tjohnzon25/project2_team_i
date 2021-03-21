@@ -16,6 +16,7 @@ class User(db.Model):
     password = db.Column(db.String(40), nullable=False)
     wishlist = db.relationship('Wishlist', backref='user')
 
+
 class Wishlist(db.Model):
     """Wishlist Class: hold info about each item in the wishlist"""
     __tablename__ = "wishlist"
@@ -29,7 +30,7 @@ class Content(db.Model):
     """ Holds all content to the specific wishlist """
     __tablename__ = "content"
     id = db.Column(db.Integer, primary_key=True)
-    content = db.Column(db.String(50), nullable=False)
+    content = db.Column(db.String(50), unique=True, nullable=False)
     wishlist_id = db.Column(db.Integer, ForeignKey('wishlist.id'))
 
 
@@ -75,25 +76,60 @@ def profile():
     return render_template('profile.html')
 
 
-@app.route('/wishlist')
+@app.route('/wishlist') # could be the admin page to show all users, wishlists, and content
 def wishlist():
-
-    # user1 = User(username="Adam", password="Apple")
-    # db.session.add(user1)
-    # db.session.commit()
-
-    # #wishlist1 = Wishlist(wishlist_name="Adam's", content="Chili", user=user1)
-    # wishlist1 = Wishlist(wishlist_name="Adams's", user=user1)
-    # db.session.add(wishlist1)
-    # db.session.commit()
-
-    # content1 = Content(content="Chili", wishlist=wishlist1)
-    # db.session.add(content1)
-    # db.session.commit()
-
     data_wishlist = Wishlist.query.all()
     data_content = Content.query.all()
     return render_template('wishlist.html', data_wishlist=data_wishlist, data_content=data_content)
 
+
+@app.route('/userwishlist', methods=["GET", "POST"])
+def user_wishlist():
+
+    # make it so that it only is for the user that is logged in (when tyler finishes)
+
+    if request.method == "POST":
+        new_wishlist_name = request.form.get("new_wishlist_name")
+
+        # checks if the entry is empty or blank space
+        if new_wishlist_name and new_wishlist_name.strip(): 
+            newWishlist = Wishlist(wishlist_name=new_wishlist_name, user_id=1) #change user_id later when login is done
+            db.session.add(newWishlist)
+            db.session.commit()
+        
+    data_users = User.query.all()
+    data_wishlist = Wishlist.query.all()
+    return render_template('user_wishlists.html', data_users=data_users, data_wishlist=data_wishlist)
+
+
+@app.route('/display_content.html', methods=["GET", "POST"])
+def display_content():
+
+    if request.method == "POST":
+        new_content = request.form.get("new_content")
+
+        check_content = Content.query.all()
+        check_wishlist = Wishlist.query.all()
+
+        if new_content and new_content.strip():
+            
+            check = True
+
+            for theContent in check_content: #make sure to only do this in the specific wishlist
+                if new_content == theContent.content:
+                    check = False
+
+            if check:
+                newContent = Content(content=new_content, wishlist_id=1) #change wishlist_id when login is done
+                db.session.add(newContent)
+                db.session.commit()
+
+    # check if the data is NULL before printing (maybe dont have to)
+    data_wishlist = Wishlist.query.all()
+    data_content = Content.query.all()
+
+    return render_template('display_content.html', data_wishlist=data_wishlist, data_content=data_content)
+
+        
 if __name__ == '__main__':
     app.run()

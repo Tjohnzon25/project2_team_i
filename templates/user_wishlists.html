@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>User Wishlist</title>
+</head>
+<body>
+    <form action="{{ url_for("user_wishlist")}}", method="post">
+
+        <label for="wishlist_name">Create New Wishlist: </label>
+        <input type="text" id="wishlist_name" name="new_wishlist_name" placeholder="Enter name">
+        <input type="submit" name="createBtn">
+
+        {% for i in data_users%}
+            <p>{{i.username}}</p>
+            {% for j in data_wishlist %}
+                {% if j.user_id == i.id %}
+                    <li>
+                        <a href="display_content.html">{{j.wishlist_name}}</a>
+                    </li>
+                {% endif %}
+            {% endfor %}
+
+        {% endfor %}
+        
+    </form>
+</body>
+</html>
