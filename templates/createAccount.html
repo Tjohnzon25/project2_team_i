@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Create Account</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
+
+</head>
+<body>
+    <!--form action="{{ url_for('profile') }}"method="post"-->
+    <br><br>
+        <h1>Create an Account</h1><br><br><br>
+        <input type="text" id="user" name="username" placeholder="Enter Username"><br><br><br>
+        <input type="password" id="pass" name="password" placeholder="Enter Password"><br><br><br>
+        <input type="sub_password" id="sub_pass" name="sub_password" placeholder="Re-enter Password"><br><br><br>
+        <input type="submit" id="sub" name="createBtn" class="btn btn-primary" onclick="addToUser()">
+    <!--/form-->
+    <div id="test"></div>
+
+    <script>
+    function addToUser(){
+        newUser = User(username = name,password = pass );
+        db.session.add(newUser);
+        db.session.commit();
+        location.href = '/login';
+    }
+    </script>
+
+    <style>
+        body {
+            text-align: center;
+            background-color: aliceblue;
+        }
+
+        h1 {
+            font-family: fantasy;
+            color: blue;
+            font-size: 400%;
+        }
+
+        #pass {
+            width:350px;
+            height:50px;
+        }
+
+        #user {
+            width:350px;
+            height:50px;
+        }
+
+        #sub_pass {
+            width:350px;
+            height:50px;
+        }
+
+        #sub {
+            width: 150px;
+            height: 50px;
+            font-size: 125%;
+        }
+    </style>
+
+
+    <script>
+        //document.getElementById("test").innerHTML = "HI THERE!!!!";
+    </script>
+</body>
+</html>

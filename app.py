@@ -42,6 +42,9 @@ def hello_world():
 def login():
         return render_template('login.html')
 
+@app.route('/createaccount')
+def createaccount():
+    return render_template('createAccount.html')
 
 @app.route('/profile')
 def profile():

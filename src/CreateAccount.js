@@ -2,8 +2,17 @@ import React from 'react';
 
 export class CreateAccount extends React.Component{
 
+    test = () =>{
+        fetch('/test').then(response =>{
+            if(response.ok){
+                console.log(response);
+            }
+        })
+    }
+
     swapPage = () =>{
-        this.props.history.push('/AdminView');
+        this.test();
+        //this.props.history.push('/AdminView');
     } 
 
     render(){
