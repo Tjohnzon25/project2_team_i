@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, url_for, jsonify
+from flask import Flask, render_template, request, url_for, jsonify, redirect
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import relationship
 from sqlalchemy import ForeignKey
@@ -68,12 +68,31 @@ def main():
     return render_template('index.html')
 
 
-@app.route('/login')
+@app.route('/login', methods=['GET', 'POST'])
 def login():
-        return render_template('login.html')
+    request_method = request.method
+    if request.method == 'POST':
+        first_name = request.form['username']
+        print('-----------')
+        print(request.form)
+        print('-----------')
+        return redirect(url_for('name', first_name=first_name))
+    return render_template('login.html', request_method=request_method)
 
 
-@app.route('/profile')
+@app.route('/name/<string:first_name>', methods=['GET', 'POST'])
+def name(first_name):
+    request_method = request.method
+    if request.method == 'POST':
+        log_out = request.form['log_out_button']
+        print('-----------')
+        print(request.form)
+        print('-----------')
+        return redirect(url_for('login'))
+    return render_template('profile.html')
+
+
+@app.route('/profile', methods=['GET', 'POST'])
 def profile():
     return render_template('profile.html')
 
