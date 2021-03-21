@@ -12,19 +12,21 @@
         <h1>Create an Account</h1><br><br><br>
         <input type="text" id="user" name="username" placeholder="Enter Username"><br><br><br>
         <input type="password" id="pass" name="password" placeholder="Enter Password"><br><br><br>
-        <input type="sub_password" id="sub_pass" name="sub_password" placeholder="Re-enter Password"><br><br><br>
+        <input type="password" id="re_pass" name="sub_password" placeholder="Re-enter Password"><br><br><br>
         <input type="submit" id="sub" name="createBtn" class="btn btn-primary" onclick="addToUser()">
     <!--/form-->
     <div id="test"></div>
 
     <script>
     function addToUser(){
-        newUser = User(username = name,password = pass );
-        db.session.add(newUser);
-        db.session.commit();
-        location.href = '/login';
+        if(document.getElementById("pass").value != document.getElementById("re_pass").value){
+            alert("Passwords do not match");
+        } else{
+            
+        } 
     }
-    </script>
+    </script> 
+
 
     <style>
         body {
@@ -48,7 +50,7 @@
             height:50px;
         }
 
-        #sub_pass {
+        #re_pass {
             width:350px;
             height:50px;
         }

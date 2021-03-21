@@ -46,6 +46,11 @@ def login():
 def createaccount():
     return render_template('createAccount.html')
 
+@app.route('/admin')
+def admin():
+    data_wishlist = Wishlist.query.all()
+    return render_template('adminView.html', data_wishlist=data_wishlist)
+
 @app.route('/profile')
 def profile():
     return render_template('profile.html')
