@@ -47,9 +47,12 @@ def hello_world():
     return render_template('index.html')
 
 
-@app.route('/todo', methods=['GET'])
+@app.route('/todo', methods=['GET', 'POST'])
 def todo():
     todo_form = Todo()
+    if todo_form.validate_on_submit():
+        print(todo_form.content.data)
+        return redirect('/')
     return render_template('todo.html', form=todo_form)
 
 
