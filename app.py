@@ -2,9 +2,11 @@ from flask import Flask, render_template, request, url_for, jsonify, redirect
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import ForeignKey
 from sqlalchemy.orm import relationship, Query
+from forms import Todo
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database/wishlist.db'
+app.config['SECRET_KEY'] = 'password'
 app.debug = True
 db = SQLAlchemy(app)
 
@@ -34,9 +36,21 @@ class Content(db.Model):
     wishlist_id = db.Column(db.Integer, ForeignKey('wishlist.id'))
 
 
-@app.route('/')
+@app.route('/', methods=['GET', 'POST'])
 def hello_world():
+    request_method = request.method
+    if request.method == 'POST':
+        if request.form['button'] == "Log In":
+            return redirect(url_for('login'))
+        elif request.form['button'] == "Create Account":
+            return redirect(url_for('createaccount'))
     return render_template('index.html')
+
+
+@app.route('/todo', methods=['GET'])
+def todo():
+    todo_form = Todo()
+    return render_template('todo.html', form=todo_form)
 
 
 @app.route('/login', methods=['GET', 'POST'])
