@@ -44,7 +44,8 @@ def login():
 
 @app.route('/createaccount')
 def createaccount():
-    return render_template('createAccount.html')
+    data_users = User.query.all()
+    return render_template('createAccount.html', data_users=data_users)
 
 @app.route('/admin')
 def admin():

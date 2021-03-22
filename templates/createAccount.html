@@ -13,17 +13,22 @@
         <input type="text" id="user" name="username" placeholder="Enter Username"><br><br><br>
         <input type="password" id="pass" name="password" placeholder="Enter Password"><br><br><br>
         <input type="password" id="re_pass" name="sub_password" placeholder="Re-enter Password"><br><br><br>
-        <input type="submit" id="sub" name="createBtn" class="btn btn-primary" onclick="addToUser()">
+        <input type="submit" id="sub" name="createBtn" class="btn btn-primary" onclick="checkForIssues()">
     <!--/form-->
     <div id="test"></div>
 
     <script>
-    function addToUser(){
-        if(document.getElementById("pass").value != document.getElementById("re_pass").value){
+    function checkForIssues(){
+        if(document.getElementById("pass").value == null){
+            alert("Password cannot be blank");
+        } else if(document.getElementById("re_pass").value == null){
+            alert("You must re-enter your password");
+        } else if(document.getElementById("pass").value != document.getElementById("re_pass").value){
             alert("Passwords do not match");
         } else{
-            
+            return false;
         } 
+        return true;
     }
     </script> 
 
