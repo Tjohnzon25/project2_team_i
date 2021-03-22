@@ -1,0 +1,9 @@
+{% extends 'base.html' %}
+    {% block content %}
+        <span>Request Method - {{request_method}} </span>
+        <form method="POST">
+            <input type="text" placeholder="Username" name="first_name">
+            <input type="password" placeholder="Password" name="last_name">
+            <input type="submit">
+        </form>
+    {% endblock content %}

@@ -9,13 +9,14 @@
 <body>
     <!--form action="{{ url_for('profile') }}"method="post"-->
     <br><br>
-        <h1>Log in to My Account</h1><br><br><br>
-        <input type="text" id="user" name="username" placeholder="Enter Username"><br><br><br>
-        <input type="password" id="pass" name="password" placeholder="Enter Password"><br><br><br>
-        <input type="submit" id="sub" name="loginBtn" class="btn btn-primary">
     <!--/form-->
-    <div id="test"></div>
-
+    
+        <form method="POST">
+            <h1>Log in to My Account</h1><br><br><br>
+            <input type="text" id="user" name="username" placeholder="Enter Username"><br><br><br>
+            <input type="password" id="pass" name="password" placeholder="Enter Password"><br><br><br>
+            <input type="submit" id="sub" name="loginBtn" class="btn btn-primary">
+        </form>
 
     <style>
         body {
