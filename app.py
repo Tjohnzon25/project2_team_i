@@ -1,10 +1,10 @@
-from flask import Flask, render_template, request, url_for, jsonify, redirect
+from flask import Flask, render_template, request, url_for, redirect
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import ForeignKey
 from sqlalchemy.orm import relationship, Query
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database/wishlist.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database/final.db'
 app.config['SECRET_KEY'] = 'password'
 app.debug = True
 db = SQLAlchemy(app)
@@ -16,6 +16,8 @@ class User(db.Model):
     username = db.Column(db.String(40), unique=True, nullable=False)
     password = db.Column(db.String(40), nullable=False) 
     wishlist = db.relationship('Wishlist', backref='user')
+    logged_in = db.Column(db.Integer, nullable=False)
+
 
 
 class Wishlist(db.Model):
@@ -70,6 +72,20 @@ def login():
         for i in range(len(data)):
             if data[i].username == username and data[i].password == password:
                 return redirect(url_for('profile'))
+        # first_name = request.form['username']
+        # print('-----------')
+        # print(request.form)
+        # print('-----------')
+
+        # users = User.query.all()
+
+        # for i in users:
+        #     if(i.username == first_name):
+        #         i.logged_in = 1
+        #         db.session.commit()
+
+        # return redirect(url_for('name', first_name=first_name))
+        # return render_template()
     return render_template('login.html', request_method=request_method)
 
 
@@ -77,11 +93,31 @@ def login():
 def name(first_name):
     request_method = request.method
     if request.method == 'POST':
-        log_out = request.form['log_out_button']
-        #print('-----------')
-        #print(request.form)
-        #print('-----------')
-        return redirect(url_for('login'))
+        if request.form['button'] == "Log Out":
+            # log_out = request.form['log_out_button']
+
+            users = User.query.all()
+
+            for i in users:
+                if(i.username == first_name):
+                    i.logged_in = 0
+                    db.session.commit()
+
+            return redirect(url_for('login'))
+
+        elif request.form['button'] == "See Wishlists":
+            data_users = User.query.all()
+            data_wishlist = Wishlist.query.all()
+            data_content = Content.query.all()
+
+            user = first_name
+            return render_template('user_wishlists.html', user=user, data_users=data_users, data_wishlist=data_wishlist, data_content=data_content)
+        elif request.form['button'] == "Create Wishlist":
+            data_users = User.query.all()
+            data_wishlist = Wishlist.query.all()
+
+            return render_template('create_wishlist.html', user=first_name, data_users=data_users, data_wishlist=data_wishlist)
+
     return render_template('profile.html')
 
 @app.route('/createaccount', methods=['GET', 'POST'])
@@ -89,11 +125,11 @@ def createaccount():
     if request.method == 'POST':
         new_username = request.form['username']
         new_password = request.form['password']
-        newUser = User(username=new_username, password=new_password)
+        newUser = User(username=new_username, password=new_password, logged_in=0)
         db.session.add(newUser)
         db.session.commit()
-        return redirect(url_for("login"))
-    else:
+        return redirect("/login")
+    else:     
         return render_template('createAccount.html')
 
 @app.route('/admin')
@@ -106,7 +142,7 @@ def profile():
     return render_template('profile.html')
 
 
-@app.route('/wishlist') # could be the admin page to show all users, wishlists, and content
+@app.route('/wishlist')
 def wishlist():
     data_wishlist = Wishlist.query.all()
     data_content = Content.query.all()
@@ -114,51 +150,83 @@ def wishlist():
 
 
 @app.route('/userwishlist', methods=["GET", "POST"])
-def user_wishlist():
+def user_wishlist():   
 
-    # make it so that it only is for the user that is logged in (when tyler finishes)
-
-    if request.method == "POST":
-        new_wishlist_name = request.form.get("new_wishlist_name")
-
-        # checks if the entry is empty or blank space
-        if new_wishlist_name and new_wishlist_name.strip(): 
-            newWishlist = Wishlist(wishlist_name=new_wishlist_name, user_id=1) #change user_id later when login is done
-            db.session.add(newWishlist)
-            db.session.commit()
-        
     data_users = User.query.all()
-    data_wishlist = Wishlist.query.all()
-    return render_template('user_wishlists.html', data_users=data_users, data_wishlist=data_wishlist)
-
-
-@app.route('/display_content.html', methods=["GET", "POST"])
-def display_content():
-
-    if request.method == "POST":
-        new_content = request.form.get("new_content")
-
-        check_content = Content.query.all()
-        check_wishlist = Wishlist.query.all()
-
-        if new_content and new_content.strip():
-            
-            check = True
-
-            for theContent in check_content: #make sure to only do this in the specific wishlist
-                if new_content == theContent.content:
-                    check = False
-
-            if check:
-                newContent = Content(content=new_content, wishlist_id=1) #change wishlist_id when login is done
-                db.session.add(newContent)
-                db.session.commit()
-
-    # check if the data is NULL before printing (maybe dont have to)
     data_wishlist = Wishlist.query.all()
     data_content = Content.query.all()
 
-    return render_template('display_content.html', data_wishlist=data_wishlist, data_content=data_content)
+    if request.method == "POST":
+
+        theWishlist = request.form['wishlist']
+        theContent = request.form['new_content']
+
+        checkContent = False
+        checkWishlist = False
+        error = ""
+
+        #checks to make sure you can add the content
+        for i in data_users:
+            if i.logged_in == 1:
+                for j in data_wishlist:
+                    if theWishlist == j.wishlist_name:
+                        checkWishlist = True
+                        for h in data_content:
+                            if theContent == h.content:
+                                checkContent = True
+                            
+        if checkWishlist == False:
+            error = "Wishlist doesn't Exist"
+            print(error)
+        elif checkContent:
+            error = "Content already exists"
+            print(error)
+        else:
+            for i in data_users:
+                if i.logged_in == 1:
+                    for j in data_wishlist:
+                        if theWishlist == j.wishlist_name:
+                            content = Content(content=theContent, wishlist_id=j.id)
+                            db.session.add(content)
+                            db.session.commit()
+
+                            contents = Content.query.all()
+
+                            return render_template('user_wishlists.html', user=i.username, data_users=data_users, data_wishlist=data_wishlist, data_content=contents)
+
+
+    return render_template('user_wishlists.html', data_users=data_users, data_wishlist=data_wishlist)
+
+
+@app.route('/create_wishlist', methods=["GET", "POST"])
+def create_wishlist():
+
+    if request.method == "POST":
+        new_wishlist = request.form['new_wishlist']
+
+        allUsers = User.query.all()
+        allWishlists = Wishlist.query.all()
+
+        error = ""
+
+        check = True
+
+        for users in allUsers:
+            if users.logged_in == 1:
+
+                for j in allWishlists:
+                    if j.wishlist_name == new_wishlist:
+                        check = False
+
+                if check:
+                    wishlist = Wishlist(wishlist_name=new_wishlist, user_id=users.id)
+                    db.session.add(wishlist)
+                    db.session.commit()
+                    return redirect(url_for('name', first_name=users.username))
+                else:
+                    error = "Wishlist name already exists"
+
+    return render_template('create_wishlist.html', error=error)
 
         
 if __name__ == '__main__':
