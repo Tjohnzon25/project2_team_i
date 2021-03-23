@@ -6,22 +6,32 @@
 <body>
     <form action="{{ url_for("user_wishlist")}}", method="post">
 
-        <label for="wishlist_name">Create New Wishlist: </label>
-        <input type="text" id="wishlist_name" name="new_wishlist_name" placeholder="Enter name">
-        <input type="submit" name="createBtn">
+        <b><h1>{{ user }} Wishlists with Content</h1></b>
 
         {% for i in data_users%}
-            <p>{{i.username}}</p>
             {% for j in data_wishlist %}
                 {% if j.user_id == i.id %}
-                    <li>
-                        <a href="display_content.html">{{j.wishlist_name}}</a>
-                    </li>
+                    {% if i.username == user %}
+
+                        <b><p>{{j.wishlist_name}}</p></b>
+                       
+                        {% for content in data_content %}
+                            {% if content.wishlist_id == j.id %}
+                                <p>{{ content.content }}</p>
+                            {% endif %}
+                        {% endfor %}
+
+                    {% endif %}
                 {% endif %}
             {% endfor %}
 
         {% endfor %}
+        <input type="text" id="wishlist" name="wishlist" placeholder="Enter wishlist">
+
+        <input type="text" id="new_content" name="new_content" placeholder="Enter content">
+        <input type="submit" name="button" value="Add Content">
         
+        <p>{{error}}</p>
     </form>
 </body>
 </html>
