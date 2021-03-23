@@ -8,7 +8,7 @@
         {%for i in data_users%}
             <p> 
                 Delete {{i.username}}
-                <button type="text" name="id">ID: {{i.id}}</button> 
+                <input type="submit" name="id" value={{i.id}} class="btn-primary">{{i.id}}</button> 
             </p>
         {% endfor %}
     </form>

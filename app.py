@@ -66,26 +66,22 @@ def todo():
 def login():
     request_method = request.method
     if request.method == 'POST':
-        username = request.form['username']
-        password = request.form['password']
-        data = User.query.all()
-        for i in range(len(data)):
-            if data[i].username == username and data[i].password == password:
-                return redirect(url_for('profile'))
-        # first_name = request.form['username']
-        # print('-----------')
-        # print(request.form)
-        # print('-----------')
+        first_name = request.form['username']
+        print('-----------')
+        print(request.form)
+        print('-----------')
+        
+        users = User.query.all()
+        check = False
 
-        # users = User.query.all()
-
-        # for i in users:
-        #     if(i.username == first_name):
-        #         i.logged_in = 1
-        #         db.session.commit()
-
-        # return redirect(url_for('name', first_name=first_name))
-        # return render_template()
+        for i in users:
+            if(i.username == first_name):
+                check = True
+                i.logged_in = 1
+                db.session.commit()
+        if check:
+            return redirect(url_for('name', first_name=first_name))
+        
     return render_template('login.html', request_method=request_method)
 
 
@@ -124,7 +120,6 @@ def name(first_name):
 def createaccount():
     if request.method == 'POST':
         new_username = request.form['username']
-<<<<<<< HEAD
         exists = db.session.query(User.username).filter_by(username=new_username).first()
         if exists == None:
             new_password = request.form['password']
@@ -140,21 +135,11 @@ def createaccount():
         return render_template('createAccount.html', error_message=error_message)
 
 @app.route('/admin', methods=['GET','POST'])
-=======
-        new_password = request.form['password']
-        newUser = User(username=new_username, password=new_password, logged_in=0)
-        db.session.add(newUser)
-        db.session.commit()
-        return redirect("/login")
-    else:     
-        return render_template('createAccount.html')
-
-@app.route('/admin')
->>>>>>> b785260c0c6ff657b2616c2c14202387101271e0
 def admin():
     if request.method == "POST":
         user_remove = request.form['id']
         temp_user = User.query.get(user_remove)
+        db.session.delete(temp_user)
         data_users = User.query.all()
         return render_template('adminView.html', data_users=data_users)
     else:    
