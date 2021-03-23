@@ -141,8 +141,50 @@ def wishlist():
 
 @app.route('/userwishlist', methods=["GET", "POST"])
 def user_wishlist():   
+
     data_users = User.query.all()
     data_wishlist = Wishlist.query.all()
+    data_content = Content.query.all()
+
+    if request.method == "POST":
+
+        theWishlist = request.form['wishlist']
+        theContent = request.form['new_content']
+
+        checkContent = False
+        checkWishlist = False
+        error = ""
+
+        #checks to make sure you can add the content
+        for i in data_users:
+            if i.logged_in == 1:
+                for j in data_wishlist:
+                    if theWishlist == j.wishlist_name:
+                        checkWishlist = True
+                        for h in data_content:
+                            if theContent == h.content:
+                                checkContent = True
+                            
+        if checkWishlist == False:
+            error = "Wishlist doesn't Exist"
+            print(error)
+        elif checkContent:
+            error = "Content already exists"
+            print(error)
+        else:
+            for i in data_users:
+                if i.logged_in == 1:
+                    for j in data_wishlist:
+                        if theWishlist == j.wishlist_name:
+                            content = Content(content=theContent, wishlist_id=j.id)
+                            db.session.add(content)
+                            db.session.commit()
+
+                            contents = Content.query.all()
+
+                            return render_template('user_wishlists.html', user=i.username, data_users=data_users, data_wishlist=data_wishlist, data_content=contents)
+
+
     return render_template('user_wishlists.html', data_users=data_users, data_wishlist=data_wishlist)
 
 
@@ -163,10 +205,10 @@ def create_wishlist():
             if users.logged_in == 1:
 
                 for j in allWishlists:
-                    if(j.wishlist_name == new_wishlist):
+                    if j.wishlist_name == new_wishlist:
                         check = False
 
-                if(check):
+                if check:
                     wishlist = Wishlist(wishlist_name=new_wishlist, user_id=users.id)
                     db.session.add(wishlist)
                     db.session.commit()
