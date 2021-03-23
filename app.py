@@ -70,8 +70,14 @@ def login():
         print('-----------')
         print(request.form)
         print('-----------')
+<<<<<<< HEAD
         
         users = User.query.all()
+=======
+
+        users = User.query.all()
+
+>>>>>>> a707f04aae3fb0678b6e7de2904c0efd66c472dc
         check = False
 
         for i in users:
@@ -79,9 +85,16 @@ def login():
                 check = True
                 i.logged_in = 1
                 db.session.commit()
+<<<<<<< HEAD
         if check:
             return redirect(url_for('name', first_name=first_name))
         
+=======
+
+        if check:
+            return redirect(url_for('name', first_name=first_name))
+
+>>>>>>> a707f04aae3fb0678b6e7de2904c0efd66c472dc
     return render_template('login.html', request_method=request_method)
 
 
