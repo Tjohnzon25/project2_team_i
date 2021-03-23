@@ -83,18 +83,30 @@ def name(first_name):
 def createaccount():
     if request.method == 'POST':
         new_username = request.form['username']
-        new_password = request.form['password']
-        newUser = User(username=new_username, password=new_password)
-        db.session.add(newUser)
-        db.session.commit()
-        return redirect(url_for("login")
-    else:     
-        return render_template('createAccount.html')
+        exists = db.session.query(User.username).filter_by(username=new_username).first()
+        if exists == None:
+            new_password = request.form['password']
+            newUser = User(username=new_username, password=new_password)
+            db.session.add(newUser)
+            db.session.commit()
+            return redirect(url_for("login"))
+        else:
+            error_message = "User already exists"
+            return render_template("createaccount.html", error_message=error_message)
+    else:
+        error_message = " "
+        return render_template('createAccount.html', error_message=error_message)
 
-@app.route('/admin')
+@app.route('/admin', methods=['GET','POST'])
 def admin():
-    data_wishlist = Wishlist.query.all()
-    return render_template('adminView.html', data_wishlist=data_wishlist)
+    if request.method == "POST":
+        user_remove = request.form['id']
+        temp_user = User.query.get(user_remove)
+        data_users = User.query.all()
+        return render_template('adminView.html', data_users=data_users)
+    else:    
+        data_users = User.query.all()    
+        return render_template('adminView.html', data_users=data_users)
 
 @app.route('/profile')
 def profile():
