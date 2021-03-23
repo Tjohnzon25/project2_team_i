@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Create Wishlist</title>
+</head>
+
+<body>
+
+    <form action="{{ url_for("create_wishlist")}}", method="post">
+
+        <label for="new_content">Create Wishlist: </label>
+        <input type="text" id="new_wishlist" name="new_wishlist" placeholder="Enter wishlist">
+        <input type="submit" name="createBtn">
+        
+
+        <br><br><p>{{error}}</p>
+    </form>
+</body>
+</html>
