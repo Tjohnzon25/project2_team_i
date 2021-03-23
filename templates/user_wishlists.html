@@ -13,11 +13,11 @@
                 {% if j.user_id == i.id %}
                     {% if i.username == user %}
 
-                        <b><p>{{j.wishlist_name}}</p></b>
+                        <u><b><p>{{j.wishlist_name}}</p></b></u>
                        
                         {% for content in data_content %}
                             {% if content.wishlist_id == j.id %}
-                                <p>{{ content.content }}</p>
+                                <p>- {{ content.content }}</p>
                             {% endif %}
                         {% endfor %}
 

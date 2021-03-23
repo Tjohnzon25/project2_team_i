@@ -66,26 +66,24 @@ def todo():
 def login():
     request_method = request.method
     if request.method == 'POST':
-        username = request.form['username']
-        password = request.form['password']
-        data = User.query.all()
-        for i in range(len(data)):
-            if data[i].username == username and data[i].password == password:
-                return redirect(url_for('profile'))
-        # first_name = request.form['username']
-        # print('-----------')
-        # print(request.form)
-        # print('-----------')
+        first_name = request.form['username']
+        print('-----------')
+        print(request.form)
+        print('-----------')
 
-        # users = User.query.all()
+        users = User.query.all()
 
-        # for i in users:
-        #     if(i.username == first_name):
-        #         i.logged_in = 1
-        #         db.session.commit()
+        check = False
 
-        # return redirect(url_for('name', first_name=first_name))
-        # return render_template()
+        for i in users:
+            if(i.username == first_name):
+                check = True
+                i.logged_in = 1
+                db.session.commit()
+
+        if check:
+            return redirect(url_for('name', first_name=first_name))
+
     return render_template('login.html', request_method=request_method)
 
 
