@@ -70,14 +70,9 @@ def login():
         print('-----------')
         print(request.form)
         print('-----------')
-<<<<<<< HEAD
-        
-        users = User.query.all()
-=======
 
         users = User.query.all()
 
->>>>>>> a707f04aae3fb0678b6e7de2904c0efd66c472dc
         check = False
 
         for i in users:
@@ -85,16 +80,10 @@ def login():
                 check = True
                 i.logged_in = 1
                 db.session.commit()
-<<<<<<< HEAD
-        if check:
-            return redirect(url_for('name', first_name=first_name))
-        
-=======
 
         if check:
             return redirect(url_for('name', first_name=first_name))
-
->>>>>>> a707f04aae3fb0678b6e7de2904c0efd66c472dc
+    
     return render_template('login.html', request_method=request_method)
 
 
@@ -136,10 +125,15 @@ def createaccount():
         exists = db.session.query(User.username).filter_by(username=new_username).first()
         if exists == None:
             new_password = request.form['password']
-            newUser = User(username=new_username, password=new_password)
-            db.session.add(newUser)
-            db.session.commit()
-            return redirect(url_for("login"))
+            #new_password = request.form.get('password', None)
+            if new_password == "":
+                error_message = "Password cannot be blank"
+                return render_template("createaccount.html", error_message=error_message)
+            else:
+                newUser = User(username=new_username, password=new_password, logged_in=0)
+                db.session.add(newUser)
+                db.session.commit()
+                return redirect(url_for("login"))
         else:
             error_message = "User already exists"
             return render_template("createaccount.html", error_message=error_message)
@@ -153,6 +147,7 @@ def admin():
         user_remove = request.form['id']
         temp_user = User.query.get(user_remove)
         db.session.delete(temp_user)
+        db.session.commit()
         data_users = User.query.all()
         return render_template('adminView.html', data_users=data_users)
     else:    
