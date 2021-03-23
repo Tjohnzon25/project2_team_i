@@ -2,7 +2,6 @@ from flask import Flask, render_template, request, url_for, jsonify, redirect
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import ForeignKey
 from sqlalchemy.orm import relationship, Query
-#from forms import Todo
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database/wishlist.db'
@@ -44,6 +43,11 @@ def hello_world():
             return redirect(url_for('login'))
         elif request.form['button'] == "Create Account":
             return redirect(url_for('createaccount'))
+    #data = User.query.all()
+    #for i in range(len(data)):
+        #print(data[i].username + ' ', end="")
+        #print(data[i].password)
+    #print(data[0].username)
     return render_template('index.html')
 
 
@@ -51,7 +55,7 @@ def hello_world():
 def todo():
     todo_form = Todo()
     if todo_form.validate_on_submit():
-        print(todo_form.content.data)
+        #print(todo_form.content.data)
         return redirect('/')
     return render_template('todo.html', form=todo_form)
 
@@ -60,11 +64,12 @@ def todo():
 def login():
     request_method = request.method
     if request.method == 'POST':
-        first_name = request.form['username']
-        print('-----------')
-        print(request.form)
-        print('-----------')
-        return redirect(url_for('name', first_name=first_name))
+        username = request.form['username']
+        password = request.form['password']
+        data = User.query.all()
+        for i in range(len(data)):
+            if data[i].username == username and data[i].password == password:
+                return redirect(url_for('profile'))
     return render_template('login.html', request_method=request_method)
 
 
@@ -73,9 +78,9 @@ def name(first_name):
     request_method = request.method
     if request.method == 'POST':
         log_out = request.form['log_out_button']
-        print('-----------')
-        print(request.form)
-        print('-----------')
+        #print('-----------')
+        #print(request.form)
+        #print('-----------')
         return redirect(url_for('login'))
     return render_template('profile.html')
 
@@ -87,8 +92,8 @@ def createaccount():
         newUser = User(username=new_username, password=new_password)
         db.session.add(newUser)
         db.session.commit()
-        return redirect(url_for("login")
-    else:     
+        return redirect(url_for("login"))
+    else:
         return render_template('createAccount.html')
 
 @app.route('/admin')
