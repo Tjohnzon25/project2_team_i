@@ -2,7 +2,7 @@ from flask import Flask, render_template, request, url_for, jsonify, redirect
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import ForeignKey
 from sqlalchemy.orm import relationship, Query
-from forms import Todo
+#from forms import Todo
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database/wishlist.db'
@@ -15,7 +15,7 @@ class User(db.Model):
     __tablename__ = "user"
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(40), unique=True, nullable=False)
-    password = db.Column(db.String(40), nullable=False)
+    password = db.Column(db.String(40), nullable=False) 
     wishlist = db.relationship('Wishlist', backref='user')
 
 
@@ -79,10 +79,17 @@ def name(first_name):
         return redirect(url_for('login'))
     return render_template('profile.html')
 
-@app.route('/createaccount')
+@app.route('/createaccount', methods=['GET', 'POST'])
 def createaccount():
-    data_users = User.query.all()
-    return render_template('createAccount.html', data_users=data_users)
+    if request.method == 'POST':
+        new_username = request.form['username']
+        new_password = request.form['password']
+        newUser = User(username=new_username, password=new_password)
+        db.session.add(newUser)
+        db.session.commit()
+        return redirect(url_for("login")
+    else:     
+        return render_template('createAccount.html')
 
 @app.route('/admin')
 def admin():
