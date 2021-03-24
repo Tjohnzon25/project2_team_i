@@ -2,18 +2,49 @@
 <html>
 <head>
     <title>Create Wishlist</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
+
 </head>
 
 <body>
-
+<br><br>
     <form action="{{ url_for("create_wishlist")}}", method="post">
 
-        <label for="new_content">Create Wishlist: </label>
-        <input type="text" id="new_wishlist" name="new_wishlist" placeholder="Enter wishlist">
-        <input type="submit" name="createBtn">
+        <h1>Create Wishlist</h1><br><br>
+        <label for="new_content"> </label>
+        <input type="text" id="new_wishlist" name="new_wishlist" placeholder="Enter New Wishlist"><br><br><br>
+        <input type="submit" id="sub" value="Add" name="createBtn" class="btn btn-primary">
         
 
         <br><br><p>{{error}}</p>
     </form>
+<style>
+    body {
+        text-align: center;
+        background-color: aliceblue;
+    }
+
+    h1 {
+        font-family: fantasy;
+        color: blue;
+        font-size: 325%;
+    }
+    #new_wishlist {
+        width:350px;
+        height:50px;
+    }
+
+    #user {
+        width:350px;
+        height:50px;
+    }
+
+    #sub {
+        width: 150px;
+        height: 50px;
+        font-size: 125%;
+    }
+</style>
+</body>
 </body>
 </html>

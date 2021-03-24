@@ -9,6 +9,7 @@ app.config['SECRET_KEY'] = 'password'
 app.debug = True
 db = SQLAlchemy(app)
 
+
 class User(db.Model):
     """This is the user class to hold info about each user and store into a database"""
     __tablename__ = "user"
@@ -45,11 +46,6 @@ def hello_world():
             return redirect(url_for('login'))
         elif request.form['button'] == "Create Account":
             return redirect(url_for('createaccount'))
-    #data = User.query.all()
-    #for i in range(len(data)):
-        #print(data[i].username + ' ', end="")
-        #print(data[i].password)
-    #print(data[0].username)
     return render_template('index.html')
 
 
@@ -57,7 +53,6 @@ def hello_world():
 def todo():
     todo_form = Todo()
     if todo_form.validate_on_submit():
-        #print(todo_form.content.data)
         return redirect('/')
     return render_template('todo.html', form=todo_form)
 
@@ -66,24 +61,17 @@ def todo():
 def login():
     request_method = request.method
     if request.method == 'POST':
+        #first_name = request.form['create_account_button']
         first_name = request.form['username']
-        print('-----------')
-        print(request.form)
-        print('-----------')
-
         users = User.query.all()
-
         check = False
-
         for i in users:
             if(i.username == first_name):
                 check = True
                 i.logged_in = 1
                 db.session.commit()
-
         if check:
             return redirect(url_for('name', first_name=first_name))
-    
     return render_template('login.html', request_method=request_method)
 
 
@@ -92,31 +80,24 @@ def name(first_name):
     request_method = request.method
     if request.method == 'POST':
         if request.form['button'] == "Log Out":
-            # log_out = request.form['log_out_button']
-
             users = User.query.all()
-
             for i in users:
                 if(i.username == first_name):
                     i.logged_in = 0
                     db.session.commit()
-
             return redirect(url_for('login'))
-
         elif request.form['button'] == "See Wishlists":
             data_users = User.query.all()
             data_wishlist = Wishlist.query.all()
             data_content = Content.query.all()
-
             user = first_name
             return render_template('user_wishlists.html', user=user, data_users=data_users, data_wishlist=data_wishlist, data_content=data_content)
         elif request.form['button'] == "Create Wishlist":
             data_users = User.query.all()
             data_wishlist = Wishlist.query.all()
-
             return render_template('create_wishlist.html', user=first_name, data_users=data_users, data_wishlist=data_wishlist)
-
     return render_template('profile.html')
+
 
 @app.route('/createaccount', methods=['GET', 'POST'])
 def createaccount():
