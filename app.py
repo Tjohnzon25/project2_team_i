@@ -163,34 +163,86 @@ def user_wishlist():
         checkWishlist = False
         error = ""
 
-        #checks to make sure you can add the content
-        for i in data_users:
-            if i.logged_in == 1:
-                for j in data_wishlist:
-                    if theWishlist == j.wishlist_name:
-                        checkWishlist = True
-                        for h in data_content:
-                            if theContent == h.content:
-                                checkContent = True
-                            
-        if checkWishlist == False:
-            error = "Wishlist doesn't Exist"
-            print(error)
-        elif checkContent:
-            error = "Content already exists"
-            print(error)
-        else:
+        user = ""
+
+        if request.form['button'] == "Delete Content":
             for i in data_users:
                 if i.logged_in == 1:
+                    
+                    user = i.username
+
+                    if theWishlist == "" or theContent == "":
+                        error = "Field is empty"
+                        return render_template('user_wishlists.html', user=i.username, data_users=data_users, data_wishlist=data_wishlist, data_content=data_content, error=error)
+
                     for j in data_wishlist:
                         if theWishlist == j.wishlist_name:
-                            content = Content(content=theContent, wishlist_id=j.id)
-                            db.session.add(content)
-                            db.session.commit()
+                            checkWishlist = True
+                            for h in data_content:
+                                if theContent == h.content:
+                                    checkContent = True
 
-                            contents = Content.query.all()
+            if checkWishlist == False:
+                error = "Wishlist doesn't exist"
+                return render_template('user_wishlists.html', user=user, data_users=data_users, data_wishlist=data_wishlist, data_content=data_content, error=error)
 
-                            return render_template('user_wishlists.html', user=i.username, data_users=data_users, data_wishlist=data_wishlist, data_content=contents)
+
+            if checkContent == False:
+                error = "Content doesn't exist"
+                return render_template('user_wishlists.html', user=user, data_users=data_users, data_wishlist=data_wishlist, data_content=data_content, error=error)
+            else:
+                content = Content.query.filter_by(content=theContent).first()
+                db.session.delete(content)
+                db.session.commit()
+
+                allContent = Content.query.all()
+
+                return render_template('user_wishlists.html', user=user, data_users=data_users, data_wishlist=data_wishlist, data_content=allContent)
+        else: 
+
+            #checks to make sure you can add the content
+            for i in data_users:
+                if i.logged_in == 1:
+
+                    if theWishlist == "" or theContent == "":
+                        error = "Field is empty"
+                        return render_template('user_wishlists.html', user=i.username, data_users=data_users, data_wishlist=data_wishlist, data_content=data_content, error=error)
+
+                    for j in data_wishlist:
+                        if theWishlist == j.wishlist_name:
+                            checkWishlist = True
+                            for h in data_content:
+                                if theContent == h.content:
+                                    checkContent = True
+
+            if checkWishlist == False:
+                error = "Wishlist doesn't Exist"
+
+                # returning the right data
+                for i in data_users:
+                    if i.logged_in == 1:
+                        return render_template('user_wishlists.html', user=i.username, data_users=data_users, data_wishlist=data_wishlist, data_content=data_content,error=error)
+
+            elif checkContent:
+                error = "Content already exists"
+
+                # returning the right data
+                for i in data_users:
+                    if i.logged_in == 1:
+                        return render_template('user_wishlists.html', user=i.username, data_users=data_users, data_wishlist=data_wishlist, data_content=data_content,error=error)
+
+            else:
+                for i in data_users:
+                    if i.logged_in == 1:
+                        for j in data_wishlist:
+                            if theWishlist == j.wishlist_name:
+                                content = Content(content=theContent, wishlist_id=j.id)
+                                db.session.add(content)
+                                db.session.commit()
+
+                                contents = Content.query.all()
+
+                                return render_template('user_wishlists.html', user=i.username, data_users=data_users, data_wishlist=data_wishlist, data_content=contents)
 
 
     return render_template('user_wishlists.html', data_users=data_users, data_wishlist=data_wishlist)
@@ -204,6 +256,10 @@ def create_wishlist():
 
         allUsers = User.query.all()
         allWishlists = Wishlist.query.all()
+
+        if new_wishlist == "":
+            error = "Field is empty"
+            return render_template('create_wishlist.html', error=error)
 
         error = ""
 
