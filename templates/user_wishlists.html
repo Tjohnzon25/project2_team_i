@@ -16,7 +16,7 @@
                         <u><b><p>{{j.wishlist_name}}</p></b></u>
                        
                         {% for content in data_content %}
-                            {% if content.wishlist_id == j.id %}
+                            {% if content.wishlist_id == j.id%}
                                 <p>- {{ content.content }}</p>
                             {% endif %}
                         {% endfor %}
@@ -30,6 +30,7 @@
 
         <input type="text" id="new_content" name="new_content" placeholder="Enter content">
         <input type="submit" name="button" value="Add Content">
+        <input type="submit" name="button" value="Delete Content">
         
         <p>{{error}}</p>
     </form>
