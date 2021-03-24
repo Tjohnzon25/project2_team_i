@@ -203,6 +203,43 @@ def user_wishlist():
             #checks to make sure you can add the content
             for i in data_users:
                 if i.logged_in == 1:
+            #for i in data_users:
+                #if i.logged_in == 1:
+                    
+                    user = i.username
+
+                    if theWishlist == "" or theContent == "":
+                        error = "Field is empty"
+                        return render_template('user_wishlists.html', user=i.username, data_users=data_users, data_wishlist=data_wishlist, data_content=data_content, error=error)
+
+                    for j in data_wishlist:
+                        if theWishlist == j.wishlist_name:
+                            checkWishlist = True
+                            for h in data_content:
+                                if theContent == h.content:
+                                    checkContent = True
+
+            if checkWishlist == False:
+                error = "Wishlist doesn't exist"
+                return render_template('user_wishlists.html', user=user, data_users=data_users, data_wishlist=data_wishlist, data_content=data_content, error=error)
+
+
+            if checkContent == False:
+                error = "Content doesn't exist"
+                return render_template('user_wishlists.html', user=user, data_users=data_users, data_wishlist=data_wishlist, data_content=data_content, error=error)
+            else:
+                content = Content.query.filter_by(content=theContent).first()
+                db.session.delete(content)
+                db.session.commit()
+
+                allContent = Content.query.all()
+
+                return render_template('user_wishlists.html', user=user, data_users=data_users, data_wishlist=data_wishlist, data_content=allContent)
+        else: 
+
+            #checks to make sure you can add the content
+            for i in data_users:
+                if i.logged_in == 1:
 
                     if theWishlist == "" or theContent == "":
                         error = "Field is empty"
