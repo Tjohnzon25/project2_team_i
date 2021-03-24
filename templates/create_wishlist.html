@@ -10,10 +10,13 @@
 <br><br>
     <form action="{{ url_for("create_wishlist")}}", method="post">
 
-        <h1>Create Wishlist</h1><br><br>
+        <h1>Enter a Wishlist to Add/Delete</h1><br><br>
         <label for="new_content"> </label>
+
         <input type="text" id="new_wishlist" name="new_wishlist" placeholder="Enter New Wishlist"><br><br><br>
-        <input type="submit" id="sub" value="Add" name="createBtn" class="btn btn-primary">
+        <input type="submit" id="sub" name="button" value="Add" class="btn btn-primary"><br><br><br>
+        <input type="submit" id="del" name="button" value="Delete" class="btn btn-primary"><br><br><br>
+        <input type="submit" id="back" name="button" value="Go Back" class="btn btn-primary">
         
         <br><br><p>{{error}}</p>
     </form>
@@ -34,6 +37,16 @@
     }
 
     #user {
+        width:350px;
+        height:50px;
+    }
+
+    #del {
+        width:350px;
+        height:50px;
+    }
+
+    #back {
         width:350px;
         height:50px;
     }

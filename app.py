@@ -165,6 +165,14 @@ def user_wishlist():
 
         user = ""
 
+        if request.form['button'] == "Go Back":
+            
+            allUsers = User.query.all()
+
+            for i in allUsers:
+                if i.logged_in == 1:
+                    return redirect(url_for('name', first_name=i.username))
+
         if request.form['button'] == "Delete Content":
             for i in data_users:
                 if i.logged_in == 1:
@@ -235,7 +243,7 @@ def user_wishlist():
                 allContent = Content.query.all()
 
                 return render_template('user_wishlists.html', user=user, data_users=data_users, data_wishlist=data_wishlist, data_content=allContent)
-        else: 
+        #else: 
 
             #checks to make sure you can add the content
             for i in data_users:
@@ -293,6 +301,13 @@ def create_wishlist():
 
         allUsers = User.query.all()
         allWishlists = Wishlist.query.all()
+        allContent = Content.query.all()
+
+        if request.form['button'] == "Go Back":
+            for i in allUsers:
+                if i.logged_in == 1:
+                    return redirect(url_for('name', first_name=i.username))
+
 
         if new_wishlist == "":
             error = "Field is empty"
@@ -302,20 +317,42 @@ def create_wishlist():
 
         check = True
 
-        for users in allUsers:
-            if users.logged_in == 1:
+        if request.form['button'] == "Add":
 
-                for j in allWishlists:
-                    if j.wishlist_name == new_wishlist:
-                        check = False
+            for users in allUsers:
+                if users.logged_in == 1:
 
-                if check:
-                    wishlist = Wishlist(wishlist_name=new_wishlist, user_id=users.id)
-                    db.session.add(wishlist)
-                    db.session.commit()
-                    return redirect(url_for('name', first_name=users.username))
-                else:
-                    error = "Wishlist name already exists"
+                    for j in allWishlists:
+                        if j.wishlist_name == new_wishlist and users.id == j.user_id:
+                            check = False
+
+                    if check:
+                        wishlist = Wishlist(wishlist_name=new_wishlist, user_id=users.id)
+                        db.session.add(wishlist)
+                        db.session.commit()
+                        return redirect(url_for('name', first_name=users.username))
+                    else:
+                        error = "Wishlist name already exists"
+                        return render_template('create_wishlist.html', error=error)
+
+        elif request.form['button'] == "Delete":
+
+            for users in allUsers:
+                if users.logged_in == 1:
+                    for j in allWishlists:
+                        if j.wishlist_name == new_wishlist and users.id == j.user_id:
+                            for i in allContent:
+                                if i.wishlist_id == j.id:
+                                    db.session.delete(i)
+                                    db.session.commit()
+                            db.session.delete(j)
+                            db.session.commit()
+                            return redirect(url_for('name', first_name=users.username))
+
+            error = "Wishlist doesn't exist"
+
+
+
 
     return render_template('create_wishlist.html', error=error)
 
