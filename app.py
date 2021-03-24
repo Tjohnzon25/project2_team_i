@@ -286,7 +286,7 @@ def create_wishlist():
                 if users.logged_in == 1:
 
                     for j in allWishlists:
-                        if j.wishlist_name == new_wishlist and users.id == j.user_id:
+                        if j.wishlist_name == new_wishlist:
                             check = False
 
                     if check:
