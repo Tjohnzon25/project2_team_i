@@ -140,6 +140,24 @@ def profile():
     return render_template('profile.html')
 
 
+@app.route('/editAccount', methods=['GET', 'Post'])
+def editAccount():
+    if request.method == 'POST':
+        if request.form['button'] == "Change Username":
+            return redirect(url_for('changeUsername'))
+        elif request.form['button'] == "Change Password":
+            return redirect(url_for('changePassword'))
+    return render_template('editAccount.html')
+
+@app.route('/changePassword', methods=['GET', 'Post'])
+def changePassword():
+    return render_template('changePassword.html')
+
+@app.route('/changeUsername', methods=['GET', 'Post'])
+def changeUsername():
+    return render_template('changeUsername.html')
+
+
 @app.route('/wishlist')
 def wishlist():
     data_wishlist = Wishlist.query.all()
