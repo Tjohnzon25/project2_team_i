@@ -6,10 +6,8 @@
 <body>
     <form method="POST">  
         {%for i in data_users%}
-            <p> 
-                Delete {{i.username}}
-                <input type="submit" name="id" value={{i.id}} class="btn-primary"></button> 
-            </p>
+             Delete {{i.username}}
+                    <input type="submit" name="id" value={{i.id}} class="btn-primary"></button><br><br>
         {% endfor %}
     </form>
 
@@ -25,20 +23,9 @@
             font-size: 325%;
         }
 
-        #pass {
-            width:350px;
-            height:50px;
-        }
-
         #user {
             width:350px;
             height:50px;
-        }
-
-        #sub {
-            width: 150px;
-            height: 50px;
-            font-size: 125%;
         }
     </style>
 </body>
