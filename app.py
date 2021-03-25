@@ -96,6 +96,9 @@ def name(first_name):
             data_users = User.query.all()
             data_wishlist = Wishlist.query.all()
             return render_template('create_wishlist.html', user=first_name, data_users=data_users, data_wishlist=data_wishlist)
+        elif request.form['button'] == "Edit Profile":
+            data_users = User.query.all()
+            return redirect(url_for('editAccount'))
     return render_template('profile.html')
 
 
@@ -138,6 +141,43 @@ def admin():
 @app.route('/profile')
 def profile():
     return render_template('profile.html')
+
+
+@app.route('/editAccount', methods=['GET', 'Post'])
+def editAccount():
+    allUsers = User.query.all()
+    if request.method == 'POST':
+        if request.form['button'] == "Change Username":
+            return redirect(url_for('changeUsername'))
+        elif request.form['button'] == "Change Password":
+            return redirect(url_for('changePassword'))
+        elif request.form['button'] == "Back":        
+            for i in allUsers:
+                if i.logged_in == 1:
+                    return redirect(url_for('name', first_name=i.username))
+        elif request.form['button'] == "Delete Account":
+            for i in allUsers:
+                if i.logged_in == 1:
+                    temp_user = User.query.get(i.id)
+                    db.session.delete(temp_user)
+                    db.session.commit()
+                    break
+            return redirect(url_for('login'))
+    return render_template('editAccount.html')
+
+@app.route('/changePassword', methods=['GET', 'Post'])
+def changePassword():
+    if request.method == "POST":
+        if request.form['button'] == "Back":        
+            return redirect(url_for('editAccount'))
+    return render_template('changePassword.html')
+
+@app.route('/changeUsername', methods=['GET', 'Post'])
+def changeUsername():
+    if request.method == "POST":
+        if request.form['button'] == "Back":        
+            return redirect(url_for('editAccount'))
+    return render_template('changeUsername.html')
 
 
 @app.route('/wishlist')
