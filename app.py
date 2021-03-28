@@ -63,10 +63,11 @@ def login():
     if request.method == 'POST':
         #first_name = request.form['create_account_button']
         first_name = request.form['username']
+        password = request.form['password']
         users = User.query.all()
         check = False
         for i in users:
-            if(i.username == first_name):
+            if(i.username == first_name and password == i.password):
                 check = True
                 i.logged_in = 1
                 db.session.commit()
