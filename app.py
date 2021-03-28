@@ -167,15 +167,38 @@ def editAccount():
 
 @app.route('/changePassword', methods=['GET', 'Post'])
 def changePassword():
+    allUsers = User.query.all()
     if request.method == "POST":
-        if request.form['button'] == "Back":        
+        if request.form['button'] == "Change Password":
+            if request.form['password1'] == request.form['password2'] and request.form['password1'] != "" and request.form['password2'] == "":
+                for i in allUsers:
+                    if i.logged_in == 1:
+                        temp_user = User.query.get(i.id)
+                        temp_user.password = request.form['password1']
+                        db.session.commit()
+                return redirect(url_for('editAccount'))
+        elif request.form['button'] == "Back":        
             return redirect(url_for('editAccount'))
     return render_template('changePassword.html')
 
 @app.route('/changeUsername', methods=['GET', 'Post'])
 def changeUsername():
+    allUsers = User.query.all()
     if request.method == "POST":
-        if request.form['button'] == "Back":        
+        if request.form['button'] == "Change Username":
+            new_username = request.form['usernameText']
+            exists = None;
+            for i in allUsers:
+                if i.username == new_username:
+                    exists = 1;
+            if exists == None:
+                for i in allUsers:
+                    if i.logged_in == 1:
+                        temp_user = User.query.get(i.id)
+                        temp_user.username = request.form['usernameText']
+                        db.session.commit()
+            return redirect(url_for("editAccount"))
+        elif request.form['button'] == "Back":        
             return redirect(url_for('editAccount'))
     return render_template('changeUsername.html')
 
