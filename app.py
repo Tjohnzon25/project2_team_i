@@ -171,13 +171,15 @@ def changePassword():
     allUsers = User.query.all()
     if request.method == "POST":
         if request.form['button'] == "Change Password":
-            if request.form['password1'] == request.form['password2'] and request.form['password1'] != "" and request.form['password2'] == "":
+            if request.form['password1'] == request.form['password2']:
                 for i in allUsers:
                     if i.logged_in == 1:
                         temp_user = User.query.get(i.id)
                         temp_user.password = request.form['password1']
                         db.session.commit()
                 return redirect(url_for('editAccount'))
+            else:
+                return render_template('changePassword.html')
         elif request.form['button'] == "Back":        
             return redirect(url_for('editAccount'))
     return render_template('changePassword.html')
